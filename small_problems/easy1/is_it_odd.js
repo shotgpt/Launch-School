@@ -1,9 +1,9 @@
 function isItOdd(num) {
-  if(num%2 === 0) {
-    return true;
+  if(Math.abs(num) % 2 === 0) {
+    return false;
   }
   else {
-    return false;
+    return true;
   }
 }
 
