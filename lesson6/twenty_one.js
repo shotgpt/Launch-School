@@ -28,7 +28,7 @@ function cardTotal(playerArr) {
     return card.split('').includes('A');
   }).length;
   for (let idx in playerArr) {
-    cardTot += CARD_VALUES[playerArr[idx][0]];
+    cardTot += CARD_VALUES[playerArr[idx].slice(0, 1)];
   }
   while (cardTot > 21 && numAces > 0) {
     cardTot -= 10;
@@ -94,7 +94,7 @@ while (!busted(userHand)) {
     dealCard(computerHand);
     let addtlCards = '';
     for (let idx = 2; idx < computerHand.length; idx++) {
-      addtlCards += ` and ${userHand[idx]} `;
+      addtlCards += ` and ${computerHand[idx]} `;
     }
     console.log(`Dealer has a ${computerHand[0]} and ${computerHand[1]} ${addtlCards}`);
   }
