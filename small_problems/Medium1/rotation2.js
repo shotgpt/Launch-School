@@ -1,13 +1,11 @@
 function rotateRightmostDigits(num, cnt) {
-  let divisor = 1 * Math.pow(10, cnt);
-  let numToRot = num % divisor;
+  let rotateIndex = -1*cnt;
+  let arr = num.toString().split('');
+  let arrToRot = arr.slice(-1*cnt);
+  arrToRot.push(arrToRot.shift());
+  arr = arr.slice(0,rotateIndex).concat(...arrToRot);
+  return parseInt(arr.join(''));
   
-  let firstNum = Math.floor(numToRot/(.1 * divisor));
-  let rotatedNum = (numToRot % (.1 * divisor))*(.1 * divisor) + firstNum;
-  console.log(`number input ${num}    number to rotate ${numToRot}    number rotated ${rotatedNum}
-    first number is ${firstNum}`);
-  
-  return (num - numToRot + rotatedNum);
 
 }
 
