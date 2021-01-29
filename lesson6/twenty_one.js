@@ -2,8 +2,21 @@ let readline = require('readline-sync');
 let deck = [];
 let userHand = [];
 let computerHand = [];
-const CARD_VALUES = { A: 11, Q: 10, J: 10, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6,
-  7: 7, 8: 8, 9: 9, 1: 10 };
+const CARD_VALUES = {
+  A: 11,
+  K: 10,
+  Q: 10,
+  J: 10,
+  2: 2,
+  3: 3,
+  4: 4,
+  5: 5,
+  6: 6,
+  7: 7,
+  8: 8,
+  9: 9,
+  1: 10
+};
 
 function initializeDeck(deck) {
   deck.push('A ♥', 'Q ♥', 'K ♥', 'J ♥', '2 ♥', '3 ♥', '4 ♥', '5 ♥', '6 ♥', '7 ♥', '8 ♥', '9 ♥', '10 ♥',
@@ -39,21 +52,28 @@ function cardTotal(playerArr) {
 
 function busted(playerArr) {
   let cardTot = cardTotal(playerArr);
-  if (cardTot > 21) return true;
-  else return false;
+  return cardTot > 21;
 }
 
 function winner(hand1, hand2) {
-  let total1 = cardTotal(hand1);
-  let total2 = cardTotal(hand2);
+  let compTotal = cardTotal(hand1);
+  let userTotal = cardTotal(hand2);
   console.log(`------------------------------------`);
-  if ((total1 > total2 && !busted(hand1)) || busted(hand2)) {
-    console.log(`Computer wins with a count of ${total1}`);
-  } else if ((total2 > total1 && !busted(hand2)) || busted(hand1)) {
-    console.log(`You win with a count of ${total2}`);
+  if ((compTotal > userTotal && !busted(hand1)) || busted(hand2)) {
+    console.log(`Computer wins with a count of ${compTotal}`);
+  } else if ((userTotal > compTotal && !busted(hand2)) || busted(hand1)) {
+    console.log(`You win with a count of ${userTotal}`);
   } else {
     console.log(`The game is a tie!`);
   }
+}
+
+function getAddtlCards(playerArr) {
+  let addtlCards = '';
+  for (let idx = 2; idx < playerArr.length; idx++) {
+    addtlCards += ` and ${playerArr[idx]} `;
+  }
+  return addtlCards;
 }
 
 initializeDeck(deck);
@@ -62,41 +82,34 @@ dealCard(userHand, 2);
 dealCard(computerHand, 2);
 
 console.log(`You have:  ${userHand[0]} and ${userHand[1]}`);
-console.log(`Dealer has a ${computerHand[0]} and an unknown card`);
+console.log(`Your total is: ${cardTotal(userHand)} \n`);
+console.log(`Dealer has a ${computerHand[0]} and an unknown card \n`);
 
 while (true) {
   console.log("hit or stay?");
   let answer = readline.question();
   console.clear();
-  if (answer === 'stay') break;
-  else {
-    let addtlCards = '';
+  if (answer === 'stay' || answer === 's') break;
+  else if (answer === 'hit' || answer === 'h') {
     dealCard(userHand);
-    for (let idx = 2; idx < userHand.length; idx++) {
-      addtlCards += ` and ${userHand[idx]} `;
-    }
-    console.log(`You have:  ${userHand[0]} and ${userHand[1]}` + addtlCards);
-    console.log(`Your total is: ${cardTotal(userHand)}`);
+    console.log(`You have:  ${userHand[0]} and ${userHand[1]}` + getAddtlCards(userHand));
+    console.log(`Your total is: ${cardTotal(userHand)} \n`);
     if (busted(userHand)) {
       console.log('You have busted!');
       break;
     }
-  }
+  } else console.log("Invalid Input: please enter hit or stay");
 }
 
-
 while (!busted(userHand)) {
-  if (cardTotal(computerHand) > 17) break;
-  else if (busted(computerHand)) {
-    console.log("Dealer busted!");
+  const DEALER_HIT_LIMIT = 17;
+  if (busted(computerHand)) {
+    console.log("Dealer busted! \n");
     break;
-  } else {
+  } else if (cardTotal(computerHand) > DEALER_HIT_LIMIT) break;
+  else {
     dealCard(computerHand);
-    let addtlCards = '';
-    for (let idx = 2; idx < computerHand.length; idx++) {
-      addtlCards += ` and ${computerHand[idx]} `;
-    }
-    console.log(`Dealer has a ${computerHand[0]} and ${computerHand[1]} ${addtlCards}`);
+    console.log(`Dealer has a ${computerHand[0]} and ${computerHand[1]} ${getAddtlCards(computerHand)} \n`);
   }
 }
 
